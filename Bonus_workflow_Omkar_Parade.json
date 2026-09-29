@@ -1,0 +1,148 @@
+{
+  "name": "Bonus_workflow_Omkar_Parade",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1ddb3a98-4569-468e-9cee-f31e68c94d9e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://demo.realworld.show",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "f527d72e-2823-4982-9266-ba624a01698d",
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2c07e096-09da-4819-adf5-16b6d5cfa2e1",
+              "leftValue": "{{ $json.statusCode }}",
+              "rightValue": "200",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5f74612d-dc33-43ca-9b6b-efcf8196434b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "paradeomkar@gmail.com",
+        "subject": "Uptime Alert: Target Site is Down!",
+        "emailType": "text",
+        "message": "Alert! The uptime monitor checked https://demo.realworld.show and detected a failure or non-200 status code. Please investigate.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        96
+      ],
+      "id": "aa91347b-fe91-4c75-b096-57f77c3481f4",
+      "name": "Send a message",
+      "webhookId": "70a64964-cbaf-4679-a11f-c4cfb7c1c87b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "n0QkMURJojr0YpWP",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dbf844fa-9e63-4fe6-9384-ccf8aa23bb57",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6628d504c86ee95c3668983be7e536a924b71196f4dd5310355179fb62a1a64f"
+  },
+  "nodeGroups": [],
+  "id": "nhbM49WbSqhJ3pBl",
+  "tags": []
+}
